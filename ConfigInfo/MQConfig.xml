@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MQConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <!--消息端口-->
+  <Port>8001</Port>
+  <!--消息IP-->
+  <ServerUrl>192.169.23.19</ServerUrl>
+  <!--消息类型Key-->
+  <MsgKey>cusNumber</MsgKey>
+  <!--消息类型Value-->
+  <MsgValue>int.Parse(cusNum)</MsgValue>
+  <!--接收消息通道-->
+  <ReceiveQueue>channel1</ReceiveQueue>
+  <!--发送消息通道-->
+  <SendQueue>channel2</SendQueue>
+  <!--发送通道ID-->
+  <SendId>amq-server-st</SendId>
+  <!--接受通道ID-->
+  <ReceiveId>amq-client-st</ReceiveId>
+  <!--是否异步发送-->
+  <UseAsyncSend>false</UseAsyncSend>
+  <!--重连间隔 秒-->
+  <ReConnectionTike>5</ReConnectionTike>
+  <!--MQ连接用户名，缺省无用户信息-->
+  <User />
+  <!--MQ连接用户密码，缺省无用户信息-->
+  <Password />
+  <!--MQ连接消息模式，默认为Queue队列模式-->
+  <TypeEnum>Queue</TypeEnum>
+</MQConfig>

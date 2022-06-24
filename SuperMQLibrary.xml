@@ -1,0 +1,593 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SuperMQLibrary</name>
+    </assembly>
+    <members>
+        <member name="T:SuperMQ.SuperMQTT.MQTTNetClientHelper">
+            <summary>
+            MQTTnet
+            </summary>
+        </member>
+        <member name="T:SuperMQ.SuperMQTT.MQTTNetClientHelper.ClientConnectionChange">
+            <summary>
+            连接状态改变委托
+            </summary>
+            <param name="state"></param>
+        </member>
+        <member name="E:SuperMQ.SuperMQTT.MQTTNetClientHelper.ClientConnectionEvent">
+            <summary>
+            连接状态发生改变事件
+            </summary>
+        </member>
+        <member name="T:SuperMQ.SuperMQTT.MQTTNetClientHelper.ClientMessageReceived">
+            <summary>
+            接受消息委托
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="E:SuperMQ.SuperMQTT.MQTTNetClientHelper.ClientMessageReceivedEvent">
+            <summary>
+            接受消息事件
+            </summary>
+        </member>
+        <member name="T:SuperMQ.SuperMQTT.MQTTNetClientHelper.ClientSendMessage">
+            <summary>
+            发送消息状态委托
+            </summary>
+            <param name="info"></param>
+        </member>
+        <member name="E:SuperMQ.SuperMQTT.MQTTNetClientHelper.ClientSendMessageEvent">
+            <summary>
+            发送消息状态事件
+            </summary>
+        </member>
+        <member name="F:SuperMQ.SuperMQTT.MQTTNetClientHelper.mqttClient">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SuperMQ.SuperMQTT.MQTTNetClientHelper.options">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SuperMQ.SuperMQTT.MQTTNetClientHelper.#ctor(SuperMQ.SuperMQTT.MQTTNetClientHelper.MQTTParameter)">
+            <summary>
+            构造一个实例
+            </summary>
+            <param name="mqttParameter">参数</param>
+        </member>
+        <member name="M:SuperMQ.SuperMQTT.MQTTNetClientHelper.Start">
+            <summary>
+            启动客户端
+            </summary>
+        </member>
+        <member name="M:SuperMQ.SuperMQTT.MQTTNetClientHelper.Stop">
+            <summary>
+            停止
+            </summary>
+        </member>
+        <member name="P:SuperMQ.SuperMQTT.MQTTNetClientHelper.IsRun">
+            <summary>
+            是否在运行
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SuperMQ.SuperMQTT.MQTTNetClientHelper.Work">
+            <summary>
+            工作
+            </summary>
+        </member>
+        <member name="M:SuperMQ.SuperMQTT.MQTTNetClientHelper.Publish(System.String,System.String)">
+            <summary>
+            发布消息
+            </summary>
+            <param name="Topic">发布主题</param>
+            <param name="Message">发布内容</param>
+            <returns></returns>
+        </member>
+        <member name="M:SuperMQ.SuperMQTT.MQTTNetClientHelper.Connected(MQTTnet.Client.Connecting.MqttClientConnectedEventArgs)">
+            <summary>
+            连接服务器并按标题订阅内容
+            </summary>
+            <param name="e"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SuperMQ.SuperMQTT.MQTTNetClientHelper.Disconnected(MQTTnet.Client.Disconnecting.MqttClientDisconnectedEventArgs)">
+            <summary>
+            失去连接触发事件
+            </summary>
+            <param name="e"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SuperMQ.SuperMQTT.MQTTNetClientHelper.MqttApplicationMessageReceived(MQTTnet.MqttApplicationMessageReceivedEventArgs)">
+            <summary>
+            接收消息触发事件
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="T:SuperMQ.SuperMQTT.MQTTNetClientHelper.MQTTParameter">
+            <summary>
+            连接参数
+            </summary>
+        </member>
+        <member name="P:SuperMQ.SuperMQTT.MQTTNetClientHelper.MQTTParameter.ServerUrl">
+            <summary>
+            服务器IP
+            </summary>
+        </member>
+        <member name="P:SuperMQ.SuperMQTT.MQTTNetClientHelper.MQTTParameter.Port">
+            <summary>
+            服务器端口
+            </summary>
+        </member>
+        <member name="P:SuperMQ.SuperMQTT.MQTTNetClientHelper.MQTTParameter.Password">
+            <summary>
+            选项 - 开启登录 - 密码
+            </summary>
+        </member>
+        <member name="P:SuperMQ.SuperMQTT.MQTTNetClientHelper.MQTTParameter.User">
+            <summary>
+            选项 - 开启登录 - 用户名
+            </summary>
+        </member>
+        <member name="P:SuperMQ.SuperMQTT.MQTTNetClientHelper.MQTTParameter.Topics">
+            <summary>
+            主题
+            </summary>
+        </member>
+        <member name="P:SuperMQ.SuperMQTT.MQTTNetClientHelper.MQTTParameter.Retained">
+            <summary>
+            保留
+            </summary>
+        </member>
+        <member name="P:SuperMQ.SuperMQTT.MQTTNetClientHelper.MQTTParameter.QualityOfServiceLevel">
+            <summary>
+            服务质量
+            <para>0 - 至多一次</para>
+            <para>1 - 至少一次</para>
+            <para>2 - 刚好一次</para>
+            </summary>
+        </member>
+        <member name="P:SuperMQ.SuperMQTT.MQTTNetClientHelper.MQTTParameter.ClientId">
+            <summary>
+            客户端ID
+            </summary>
+        </member>
+        <member name="T:SuperMQ.SuperMQTT.MQTTNetClientHelper.MessageInfo">
+            <summary>
+            消息体 
+            </summary>
+        </member>
+        <member name="T:SuperMQ.SuperMQTT.MQTTNetClientHelper.ConnectedState">
+            <summary>
+            连接状态
+            </summary>
+        </member>
+        <member name="F:SuperMQ.SuperMQTT.MQTTNetClientHelper.ConnectedState.Connected">
+            <summary>
+            已连接
+            </summary>
+        </member>
+        <member name="F:SuperMQ.SuperMQTT.MQTTNetClientHelper.ConnectedState.DisConnected">
+            <summary>
+            断开连接
+            </summary>
+        </member>
+        <member name="F:SuperMQ.SuperMQTT.MQTTNetClientHelper.ConnectedState.Exception">
+            <summary>
+            连接异常
+            </summary>
+        </member>
+        <member name="T:SuperApacheMQ.ActiveMqHelper">
+            <summary>
+            ActiveMq消息总线
+            </summary>
+        </member>
+        <member name="T:SuperApacheMQ.ActiveMqHelper.MqMessageTypeEnum">
+            <summary>
+            ActiveMQ消息类型
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.ActiveMqHelper.MqMessageTypeEnum.Topic">
+            <summary>
+            主题。生产者发布主题，所有订阅者都将收到该主题。
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.ActiveMqHelper.MqMessageTypeEnum.Queue">
+            <summary>
+            消息队列。点对点模式。
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.ActiveMqHelper.UriProvider">
+            <summary>
+            生产者消息总线地址
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.ActiveMqHelper.MessageName">
+            <summary>
+            主题或消息队列
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.ActiveMqHelper.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.ActiveMqHelper.Password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="M:SuperApacheMQ.ActiveMqHelper.Start">
+            <summary>
+            初始化队列消息消费者
+            </summary>
+        </member>
+        <member name="M:SuperApacheMQ.ActiveMqHelper.Stop">
+            <summary>
+            停止队列消息消费者，释放资源
+            </summary>
+        </member>
+        <member name="M:SuperApacheMQ.ActiveMqHelper.CreateProducer(SuperApacheMQ.ActiveMqHelper.MqMessageTypeEnum,System.String)">
+            <summary>
+            创建生产者
+            </summary>
+            <param name="messageType">消息类型</param>
+            <param name="messageName">主题或消息队列</param>
+        </member>
+        <member name="M:SuperApacheMQ.ActiveMqHelper.CreateProducer(SuperApacheMQ.ActiveMqHelper.MqMessageTypeEnum)">
+            <summary>
+            创建生产者
+            </summary>
+            <param name="messageType">消息类型</param>
+        </member>
+        <member name="M:SuperApacheMQ.ActiveMqHelper.CreateConsumer(SuperApacheMQ.ActiveMqHelper.MqMessageTypeEnum,System.String,System.String)">
+            <summary>
+            创建消费者
+            </summary>
+            <param name="messageType">消息类型</param>
+            <param name="messageName">主题或消息队列</param>
+            <param name="selector">筛选器</param>
+        </member>
+        <member name="M:SuperApacheMQ.ActiveMqHelper.CreateConsumer(SuperApacheMQ.ActiveMqHelper.MqMessageTypeEnum,System.String)">
+            <summary>
+            创建消费者
+            </summary>
+            <param name="messageType">消息类型</param>
+            <param name="messageName">主题或消息队列</param>
+        </member>
+        <member name="M:SuperApacheMQ.ActiveMqHelper.CreateConsumer(SuperApacheMQ.ActiveMqHelper.MqMessageTypeEnum)">
+            <summary>
+            创建消费者
+            </summary>
+            <param name="messageType">消息类型</param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:SuperApacheMQ.ActiveMqHelper.SendMapMessage(System.Collections.Generic.IDictionary{System.String,System.Object},Apache.NMS.IMessageProducer)" -->
+        <member name="M:SuperApacheMQ.ActiveMqHelper.SendMapMessage(System.Collections.Generic.IDictionary{System.String,System.Object},SuperApacheMQ.ActiveMqHelper.MqMessageTypeEnum)">
+            <summary>
+            发送消息
+            </summary>
+            <param name="messageBody">消息主体</param>
+            <param name="messageType">消息类型</param>
+        </member>
+        <member name="M:SuperApacheMQ.ActiveMqHelper.SendTextMessage(System.String,System.Collections.Generic.IDictionary{System.String,System.Object},Apache.NMS.IMessageProducer)">
+            <summary>
+            发送消息
+            </summary>
+            <param name="messageText">消息文本</param>
+            <param name="messageProperties">消息属性</param>
+            <param name="producer">生产者</param>
+        </member>
+        <member name="M:SuperApacheMQ.ActiveMqHelper.SendTextMessage(System.String,System.Collections.Generic.IDictionary{System.String,System.Object},SuperApacheMQ.ActiveMqHelper.MqMessageTypeEnum)">
+            <summary>
+            发送消息
+            </summary>
+            <param name="messageText">消息文本</param>
+            <param name="messageProperties">消息属性</param>
+            <param name="messageType">消息类型</param>
+        </member>
+        <member name="T:SuperApacheMQ.MQConfig">
+            <summary>
+            MQ通讯配置信息
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.UserID">
+            <summary>
+            用户ID
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.UserPwd">
+            <summary>
+            用户密码
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.ReceivePort">
+            <summary>
+             接收端口 本机
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.SendPort">
+            <summary>
+             发送端口 对方
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.ReceiveAddress">
+            <summary>
+            MQ连接地址接收 本机
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.SendAddress">
+            <summary>
+            MQ连接地址发送 对方
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.MsgKey">
+            <summary>
+             msgId类型
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.MsgValue">
+            <summary>
+             msgId值
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.ReceiveQueue">
+            <summary>
+            MQ接收通道
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.SendQueue">
+            <summary>
+            MQ发送通道
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.SendId">
+            <summary>
+            发送标识
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.ReceiveId">
+            <summary>
+            接收标识
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.UseAsyncSend">
+            <summary>
+            ActiveMQ异步发送 默认同步发送
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.ReConnectionTike">
+            <summary>
+            最大重连间隔 默认为 3000ms
+            </summary>
+        </member>
+        <member name="P:SuperApacheMQ.MQConfig.TypeEnum">
+            <summary>
+            ActiveMQ消息类型
+            </summary>
+        </member>
+        <member name="T:SuperApacheMQ.MQConfig.MqMessageTypeEnum">
+            <summary>
+            ActiveMQ消息类型
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.MQConfig.MqMessageTypeEnum.Topic">
+            <summary>
+            主题，广播消息。生产者发布主题，所有订阅者都将收到该主题。Topic方式适合作为消息分发或者消息多用途时使用。使用Apache-ActiveMQ实现消息传送服，所有消息获取端都可以获得相同的消息。
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.MQConfig.MqMessageTypeEnum.Queue">
+            <summary>
+            消息队列。点对点模式。Queues更适合做负载均衡，让多个消息获取端处理一组消息。使用Apache-ActiveMQ实现消息传送服，Queues方式下消息只能被获取一次，多个消息获取端不会获得重复的信息。
+            </summary>
+        </member>
+        <member name="M:SuperApacheMQ.MQConfig.Load(System.String)">
+            <summary>
+            读取MqConfig文件
+            </summary>
+            <param name="filePath">配置文件路径</param>
+            <returns>返回配置对象</returns>
+        </member>
+        <member name="M:SuperApacheMQ.MQConfig.Save(SuperApacheMQ.MQConfig,System.String)">
+            <summary>
+            保存MqConfig文件
+            </summary>
+            <param name="config">配置对象</param>
+            <param name="filePath">配置文件路径</param>
+        </member>
+        <member name="T:SuperApacheMQ.MQConfig.MessageType">
+            <summary>
+            消息类型
+            </summary>
+        </member>
+        <member name="T:SuperApacheMQ.MQConfig.MqMessage">
+            <summary>
+            通讯信息
+            </summary>
+        </member>
+        <member name="T:SuperApacheMQ.SuperMqHelper">
+            <summary>
+            <para>日 期:2018-12-29</para>
+            <para>作 者:不良帥</para>
+            <para>描 述:使用Apache-ActiveMQ实现消息传送服,Consumer集群模式</para>
+            </summary>
+        </member>
+        <member name="T:SuperApacheMQ.SuperMqHelper.Message">
+            <summary>
+            接受数据委托
+            </summary>
+            <param name="message"></param>
+            <param name="messageType"></param>
+        </member>
+        <member name="E:SuperApacheMQ.SuperMqHelper.OnRevMessage">
+            <summary>
+            接受数据事件
+            </summary>
+        </member>
+        <member name="T:SuperApacheMQ.SuperMqHelper.MessageEnhance">
+            <summary>
+            接受数据委托
+            </summary>
+            <param name="message">mq消息对象</param>
+        </member>
+        <member name="E:SuperApacheMQ.SuperMqHelper.OnRevMessageEnhance">
+            <summary>
+            接受数据事件
+            </summary>
+        </member>
+        <member name="T:SuperApacheMQ.SuperMqHelper.ConnectionExceptionListener">
+            <summary>
+             在传输过程中发生了不可恢复的异常委托
+            </summary>
+            <param name="exception">异常消息</param>
+        </member>
+        <member name="E:SuperApacheMQ.SuperMqHelper.OnConnectionExceptionListener">
+            <summary>
+             在传输过程中发生了不可恢复的异常事件
+            </summary>
+        </member>
+        <member name="T:SuperApacheMQ.SuperMqHelper.ConnectionListener">
+            <summary>
+             传输状态委托
+            </summary>
+            <param name="state">连接状态</param>
+        </member>
+        <member name="E:SuperApacheMQ.SuperMqHelper.OnConnectionListener">
+            <summary>
+            传输状态事件
+            </summary>
+        </member>
+        <member name="T:SuperApacheMQ.SuperMqHelper.SessionListener">
+            <summary>
+             会话状态委托
+            </summary>
+            <param name="state">会话状态</param>
+        </member>
+        <member name="E:SuperApacheMQ.SuperMqHelper.OnSessionListener">
+            <summary>
+            会话状态事件
+            </summary>
+        </member>
+        <member name="T:SuperApacheMQ.SuperMqHelper.ConnectState">
+            <summary>
+            连接状态
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.SuperMqHelper.ConnectState.ResumedListener">
+            <summary>
+            传输中断后，连接恢复
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.SuperMqHelper.ConnectState.InterruptedListener">
+            <summary>
+            传输受到了干扰，希望从这一插曲中恢复过来。(开始重连)
+            </summary>
+        </member>
+        <member name="T:SuperApacheMQ.SuperMqHelper.SessionState">
+            <summary>
+            会话状态
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.SuperMqHelper.SessionState.Started">
+            <summary>
+            开始
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.SuperMqHelper.SessionState.Committed">
+            <summary>
+            提交
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.SuperMqHelper.SessionState.RolledBack">
+            <summary>
+            撤回
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.SuperMqHelper.Config">
+            <summary>
+            配置对象
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.SuperMqHelper.isInit">
+            <summary>
+            是否初始化
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.SuperMqHelper.connectionFactory">
+            <summary>
+            连接工厂
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.SuperMqHelper.connection">
+            <summary>
+            连接对象
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.SuperMqHelper.session">
+            <summary>
+            会话对象
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.SuperMqHelper.receivDestination">
+            <summary>
+            发布/订阅模式
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.SuperMqHelper.sendDestination">
+            <summary>
+            发布/订阅模式
+            </summary>
+        </member>
+        <member name="F:SuperApacheMQ.SuperMqHelper.consumers">
+            <summary>
+            消费者集合
+            </summary>
+        </member>
+        <member name="M:SuperApacheMQ.SuperMqHelper.InitActiveMQ(SuperApacheMQ.MQConfig,System.Boolean,System.Boolean,System.String[])">
+            <summary>
+            初始化MQ
+            </summary>
+            <param name="config">mq配置对象</param>
+            <param name="isListener">是否使用监听接受消息</param>
+            <param name="isDurable">是否持久订阅，持久“订阅”后，如果你的程序被停止工作后，恢复运行，从第一次持久订阅开始，没收到的消息还可以继续收</param>
+            <param name="topicNames">发送端Topic主题模式有效，参数为topic主题消息队列名称</param>
+            <returns>成功返回true，否则失败</returns>
+        </member>
+        <member name="M:SuperApacheMQ.SuperMqHelper.Connection_ConnectionResumedListener">
+            <summary>
+            传输中断后，连接恢复
+            </summary>
+        </member>
+        <member name="M:SuperApacheMQ.SuperMqHelper.Connection_ConnectionInterruptedListener">
+            <summary>
+            传输受到了干扰，希望从这一插曲中恢复过来。(开始重连)
+            </summary>
+        </member>
+        <member name="M:SuperApacheMQ.SuperMqHelper.Connection_ExceptionListener(System.Exception)">
+            <summary>
+            在传输过程中发生了不可恢复的异常。
+            </summary>
+            <param name="exception"></param>
+        </member>
+        <member name="M:SuperApacheMQ.SuperMqHelper.SendMessage(System.String,System.Boolean,System.String,System.String)">
+            <summary>
+            发送消息
+            </summary>
+            <param name="msgTxt">字符串</param>
+            <param name="msgDeliveryMode">这是传输模式,Q服务器停止工作后，消息是否保留</param>
+            <param name="isPersistent">是否持久订阅，持久消息/非持久消息,只是影响宕机后。消息是否会丢失,如果永远不会宕机,那么持久消息和非持久消息没有区别。</param>
+            <param name="msgKey">实时消息类型，缺省则使用全局消息类型</param>
+            <param name="msgValue">实时消息类型值，缺省则使用全局消息类型值</param>
+            <remarks> 持久订阅者/非持久订阅者,只影响离线的时候消息(包括持久消息和非持久消息)是否能接收到,和消息是否持久无关; 持久消息/非持久消息,只是影响宕机后。消息是否会丢失,如果永远不会宕机,那么持久消息和非持久消息没有区别。 </remarks>
+            <returns>成功返回true，失败返回false</returns>
+        </member>
+        <member name="M:SuperApacheMQ.SuperMqHelper.DisInit">
+            <summary>
+            释放占用资源
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:SuperUtilities.SuperApacheMQ.MyActiveMq.InitQueueOrTopic(System.Boolean,System.String,System.Boolean)" -->
+    </members>
+</doc>
