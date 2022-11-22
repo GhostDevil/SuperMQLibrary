@@ -17,7 +17,7 @@ namespace SuperMQ.SuperMQTT
     /// <summary>
     /// MQTTnet
     /// </summary>
-    public class MQTTNetClientHelper:MQFactory.IMQClient
+    public class MQTTNetClientHelper : MQFactory.IMQClient
     {
 
         #region 委托事件
@@ -71,13 +71,13 @@ namespace SuperMQ.SuperMQTT
         public MqttClientOptions options = null;
         private bool workState = false;
         private bool running = false;
-        MqttProtocolVersion mqttProtocol = MqttProtocolVersion.V311;
+
         public MQTTParameter Parameter { get; private set; }
 #if NET462_OR_GREATER
         /// <summary>
         /// 加密协议
         /// </summary>
-        public SslProtocols SslProtocol =  SslProtocols.Default;
+        public SslProtocols SslProtocol = SslProtocols.Default;
 #endif
 #if NET6_0_OR_GREATER
         /// <summary>
@@ -94,13 +94,13 @@ namespace SuperMQ.SuperMQTT
         /// <summary>
         /// mq 协议版本
         /// </summary>
-        public MqttProtocolVersion MqttProtocol { get => mqttProtocol; set => mqttProtocol = value; }
+        public MqttProtocolVersion MqttProtocol { get; set; } = MqttProtocolVersion.V311;
         /// <summary>
         /// 证书列表
         /// </summary>
         public List<X509Certificate> x509Certificates = null;// new X509Certificate(@"C:\cert.pfx", "psw");
 
-#endregion
+        #endregion
 
         /// <summary>
         /// 构造一个实例
@@ -118,10 +118,9 @@ namespace SuperMQ.SuperMQTT
 
             Console.WriteLine("MQTT Work >>Begin");
             workState = true;
-            await Task.Run(new Action(() =>
-             {
-                 WorkMqttClient();
-             }));
+
+            await WorkMqttClient();
+
         }
         /// <summary>
         /// 停止
@@ -145,7 +144,7 @@ namespace SuperMQ.SuperMQTT
         /// <summary>
         /// 工作
         /// </summary>
-        private void WorkMqttClient()
+        private async Task WorkMqttClient()
         {
 
             try
@@ -188,9 +187,9 @@ namespace SuperMQ.SuperMQTT
 
                 mqttClient.ConnectedAsync += Connected;
                 mqttClient.DisconnectedAsync += Disconnected;
-                mqttClient.ApplicationMessageReceivedAsync += async t => await Task.Run(() => { MqttApplicationMessageReceived(t); });
+                mqttClient.ApplicationMessageReceivedAsync += MqttApplicationMessageReceived;
 
-                mqttClient.ConnectAsync(options);
+               await mqttClient.ConnectAsync(options);
             }
             catch (Exception exp)
             {
@@ -202,7 +201,7 @@ namespace SuperMQ.SuperMQTT
             }
         }
 
-#region
+        #region
         //public void StartMain()
         //{
         //    try
@@ -253,7 +252,7 @@ namespace SuperMQ.SuperMQTT
         //        Console.WriteLine("MessageReceived >>" + exp.Message);
         //    }
         //}
-#endregion
+        #endregion
 
         /// <summary>
         /// 发布消息
@@ -273,7 +272,9 @@ namespace SuperMQ.SuperMQTT
                 if (mqttClient.IsConnected == false)
                 {
                     ClientSendMessageEvent?.Invoke(false, "连接失败");
+                    Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("Publish >>Connected Failed! ");
+                    Console.ResetColor();
                     return false;
                 }
 
@@ -296,8 +297,10 @@ namespace SuperMQ.SuperMQTT
                 //}
 
                 await mqttClient.PublishAsync(mamb.Build());
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine($"Publish >>Topic: {string.Join(",", Parameter.Topics?.ToArray())}; QoS: {Parameter.QualityOfServiceLevel}; Retained: {Parameter.Retained};");
                 Console.WriteLine("Publish >>Message: " + Message);
+                Console.ResetColor();
                 ClientSendMessageEvent?.Invoke(true, "发送完成");
                 return true;
             }
@@ -322,7 +325,7 @@ namespace SuperMQ.SuperMQTT
         /// <returns></returns>
         public async Task<bool> Publish(string topic, string Message) => await Publish(new List<string>() { topic }, Message);
 
-#region event
+        #region event
 
         private bool CertificateValidationCallback(MqttClientCertificateValidationEventArgs arg)
         {
@@ -341,16 +344,19 @@ namespace SuperMQ.SuperMQTT
             {
                 running = true;
                 List<MqttTopicFilter> listTopic = new List<MqttTopicFilter>();
+                Console.ForegroundColor = ConsoleColor.Green;
                 Parameter.Topics.ForEach(o =>
                 {
                     var topicFilterBulder = new MqttTopicFilterBuilder().WithTopic(o).Build();
                     listTopic.Add(topicFilterBulder);
                     Console.WriteLine("Connected >>Subscribe " + o);
                 });
-                MqttClientSubscribeOptions options = new MqttClientSubscribeOptions() {  TopicFilters=listTopic};
+                MqttClientSubscribeOptions options = new MqttClientSubscribeOptions() { TopicFilters = listTopic };
                 await mqttClient.SubscribeAsync(options).ConfigureAwait(false);
                 ClientConnectionEvent?.Invoke(ConnectedState.Connected, "连接成功", e);
+                
                 Console.WriteLine("Connected >>Subscribe Success");
+                Console.ResetColor();
             }
             catch (Exception exp)
             {
@@ -369,7 +375,9 @@ namespace SuperMQ.SuperMQTT
             try
             {
                 ClientConnectionEvent?.Invoke(ConnectedState.DisConnected, "失去连接", null, e);
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"Disconnected >>Disconnected Server({e.Reason};{e.Exception})");
+                Console.ResetColor();
                 if (workState)
                 {
                     await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
@@ -399,7 +407,7 @@ namespace SuperMQ.SuperMQTT
         /// 接收消息触发事件
         /// </summary>
         /// <param name="e"></param>
-        private void MqttApplicationMessageReceived(MqttApplicationMessageReceivedEventArgs e)
+        private async Task MqttApplicationMessageReceived(MqttApplicationMessageReceivedEventArgs e)
         {
             try
             {
@@ -408,20 +416,22 @@ namespace SuperMQ.SuperMQTT
                 string QoS = e.ApplicationMessage.QualityOfServiceLevel.ToString();
                 string Retained = e.ApplicationMessage.Retain.ToString();
                 ClientMessageReceivedEvent?.Invoke(new MessageInfo() { QoS = e.ApplicationMessage.QualityOfServiceLevel.ToString(), Retained = e.ApplicationMessage.Retain.ToString(), Text = Encoding.UTF8.GetString(e.ApplicationMessage.Payload), Topic = e.ApplicationMessage.Topic });
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("MessageReceived >>Topic:" + Topic + "; QoS: " + QoS + "; Retained: " + Retained + ";");
                 Console.WriteLine("MessageReceived >>Msg: " + text);
+                Console.ResetColor();
+                await Task.CompletedTask;
             }
             catch (Exception exp)
             {
-
                 Console.WriteLine(exp.Message);
                 ExceptionHappenedEvent?.Invoke(exp);
             }
         }
 
-#endregion
+        #endregion
 
-#region classes
+        #region classes
         /// <summary>
         /// 参数
         /// </summary>
@@ -453,7 +463,7 @@ namespace SuperMQ.SuperMQTT
                 Tcp
             }
         }
-#endregion
+        #endregion
 
     }
 
