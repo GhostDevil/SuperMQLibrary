@@ -197,7 +197,7 @@ namespace SuperMQ.SuperMQTT
                 Console.WriteLine("Work >> " + exp);
                 running = false;
                 workState = false;
-                ExceptionHappenedEvent.Invoke(exp);
+                ExceptionHappenedEvent?.Invoke(exp);
             }
         }
 
