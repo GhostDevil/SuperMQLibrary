@@ -83,7 +83,7 @@ namespace SuperMQ.SuperMQTT
         /// <summary>
         /// 加密协议
         /// </summary>
-        public SslProtocols SslProtocol = SslProtocols.Tls | SslProtocols.Tls13;
+        public SslProtocols SslProtocol = SslProtocols.None; //SslProtocols.Tls | SslProtocols.Tls13;
 #endif
         /// <summary>
         /// 是否在运行
