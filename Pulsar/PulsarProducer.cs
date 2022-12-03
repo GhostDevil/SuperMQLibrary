@@ -4,7 +4,6 @@ using System;
 using System.Threading;
 using DotPulsar.Internal;
 using System.Threading.Tasks;
-using SY.CommTool.Pulsar;
 
 namespace SuperMQ.Pulsar
 {

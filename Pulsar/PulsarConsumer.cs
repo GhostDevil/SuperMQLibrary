@@ -6,7 +6,6 @@ using System.Threading;
 using System.Text;
 using System.Buffers;
 using System.Threading.Tasks;
-using SY.CommTool.Pulsar;
 
 namespace SuperMQ.Pulsar
 {

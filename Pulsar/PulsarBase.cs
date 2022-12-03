@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SY.CommTool.Pulsar
+namespace SuperMQ.Pulsar
 {
     public abstract class PulsarBase
     {
