@@ -9,13 +9,16 @@
 		<RootNamespace>SuperMQ</RootNamespace>
 		<AssemblyName>SuperMQLibrary</AssemblyName>
 		<FileVersion>22.11.8.0</FileVersion>
-		<LangVersion>8.0</LangVersion>
+		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
 		<DocumentationFile>obj\SuperMQLibrary.xml</DocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
+		<None Remove=".gitattributes" />
+		<None Remove=".gitignore" />
 		<None Remove="app.config" />
+		<None Remove="README.md" />
 		<None Remove="SuperMQLibrary.xml" />
 	</ItemGroup>
 	<ItemGroup>
