@@ -36,6 +36,7 @@ namespace SuperMQ.Pulsar
             {
                 client = (PulsarClient)PulsarClient.Builder()
                     .ServiceUrl(new Uri("pulsar://" + PubAddr))
+                    .ExceptionHandler(ExceptionHandler)
                     .RetryInterval(new TimeSpan(3))
                     .Build();
 
@@ -50,6 +51,11 @@ namespace SuperMQ.Pulsar
                 Task.Run(() => { Error?.Invoke(this, ex); });
                 return Task.FromResult(false);
             }
+        }
+
+        private void ExceptionHandler(ExceptionContext obj)
+        {
+            Error?.Invoke(this,obj.Exception);
         }
 
         public override async Task<bool> DisConnectAsync()
@@ -105,27 +111,6 @@ namespace SuperMQ.Pulsar
                     ProducerState.PartiallyConnected => $"The producer is partially connected.",
                     _ => $"The producer has an unknown state '{state}'"
                 };
-                //switch (state)
-                //{
-                //    case ProducerState.Closed:
-                //        stateMessage= $"The producer has closed";
-                //        break;
-                //    case ProducerState.Connected:
-                //        stateMessage = $"The producer is connected";
-                //        break;
-                //    case ProducerState.Disconnected:
-                //        stateMessage = $"The producer is disconnected";
-                //        break;
-                //    case ProducerState.Faulted:
-                //        stateMessage = $"The producer has faulted";
-                //        break;
-                //    case ProducerState.PartiallyConnected:
-                //        stateMessage = $"The producer is partially connected.";
-                //        break;
-                //    default:
-                //        stateMessage = $"The producer has an unknown state '{state}'";
-                //        break;
-                //}
 
                 Console.WriteLine($"The producer for topic '{topic}' " + stateMessage);
                 Console.WriteLine(stateChanged.ProducerState.ToString());
@@ -145,16 +130,18 @@ namespace SuperMQ.Pulsar
         /// <param name="msg"></param>
         public void Send(string msg)
         {
-            Console.WriteLine("pulsar发送生产消息:" + msg);
-
+            //Console.WriteLine("pulsar发送生产消息:" + msg);
             try
             {
                 if (IsConnected)
                 {
                     producer?.Send(msg, CancellationToken.None).ConfigureAwait(false);
-                    Console.WriteLine("pulsar发送生产消息完成!");
+                    Console.WriteLine($"pulsar发送生产消息完成!");
                 }
-
+                else
+                {
+                    Console.WriteLine($"pulsar发送生产消息失败...");
+                }
             }
             catch (Exception ex)
             { Console.WriteLine($"pulsar发送生产消息异常：{ex.Message}"); }
