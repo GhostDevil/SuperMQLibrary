@@ -11,7 +11,7 @@ using NewLife.RocketMQ.Protocol;
 
 namespace SuperMQ
 {
-    public class RocketMQConsumerHelper
+    public class RocketMQHelper
     {
         public Producer Producer{get;set;}
         public Consumer Consumer { get; set; }
