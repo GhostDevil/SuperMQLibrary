@@ -243,19 +243,11 @@ namespace SuperMQ
                             consumers.Add(session.CreateDurableConsumer(session.GetTopic(config.Topics[i]), config.ReceiveId, null, false));
                         else
                         {
-                            IDestination sendDestination;
-                            switch (config.TypeEnum)
+                            IDestination sendDestination = config.TypeEnum switch
                             {
-                                case MqMessageTypeEnum.Topic:
-                                default:
-
-                                    sendDestination = new ActiveMQTopic(config.Topics[i]);
-                                    break;
-                                case MqMessageTypeEnum.Queue:
-
-                                    sendDestination = new ActiveMQQueue(config.Topics[i]);
-                                    break;
-                            }
+                                MqMessageTypeEnum.Queue => new ActiveMQQueue(config.Topics[i]),
+                                _ => new ActiveMQTopic(config.Topics[i]),
+                            };
                             consumers.Add(session.CreateConsumer(session.GetTopic(config.Topics[i])));
                         }
                     }
@@ -397,7 +389,7 @@ namespace SuperMQ
         /// <param name="msgValue">实时消息类型值，缺省则使用全局消息类型值</param>
         /// <remarks> 持久订阅者/非持久订阅者,只影响离线的时候消息(包括持久消息和非持久消息)是否能接收到,和消息是否持久无关; 持久消息/非持久消息,只是影响宕机后。消息是否会丢失,如果永远不会宕机,那么持久消息和非持久消息没有区别。 </remarks>
         /// <returns>成功返回true，失败返回false</returns>
-        bool SendMessage(string msgTxt, List<string> Topics, bool isPersistent = false, string msgKey = "", string msgValue = "")
+        static bool SendMessage(string msgTxt, List<string> Topics, bool isPersistent = false, string msgKey = "", string msgValue = "")
         {
             try
             {
@@ -414,22 +406,20 @@ namespace SuperMQ
                 {
                     await Task.Run(async() =>
                     {
-                        using (IMessageProducer prod = session.CreateProducer(session.GetTopic(c)))
-                        {
-                            prod.DeliveryMode = msgDeliveryMode;
-                            //创建一个发送的消息对象
-                            ITextMessage message = prod.CreateTextMessage();
-                            //给这个对象赋实际的消息
-                            message.Text = msgTxt;
-                            //设置消息对象的属性，这个很重要哦，是Queue的过滤条件，也是P2P消息的唯一指定属性
-                            if (string.IsNullOrWhiteSpace(msgKey) || string.IsNullOrWhiteSpace(msgValue))
-                                message.Properties.SetString(Config.MsgKey, Config.MsgValue);
-                            else
-                                message.Properties.SetString(msgKey, msgValue);
-                            //生产者把消息发送出去，几个枚举参数MsgDeliveryMode是否长链，MsgPriority消息优先级别，发送最小单位，当然还有其他重载
-                            await prod.SendAsync(message, msgDeliveryMode, MsgPriority.Normal, TimeSpan.MinValue);
-                            //txtMessage = "发送成功!!";
-                        }
+                        using IMessageProducer prod = session.CreateProducer(session.GetTopic(c));
+                        prod.DeliveryMode = msgDeliveryMode;
+                        //创建一个发送的消息对象
+                        ITextMessage message = prod.CreateTextMessage();
+                        //给这个对象赋实际的消息
+                        message.Text = msgTxt;
+                        //设置消息对象的属性，这个很重要哦，是Queue的过滤条件，也是P2P消息的唯一指定属性
+                        if (string.IsNullOrWhiteSpace(msgKey) || string.IsNullOrWhiteSpace(msgValue))
+                            message.Properties.SetString(Config.MsgKey, Config.MsgValue);
+                        else
+                            message.Properties.SetString(msgKey, msgValue);
+                        //生产者把消息发送出去，几个枚举参数MsgDeliveryMode是否长链，MsgPriority消息优先级别，发送最小单位，当然还有其他重载
+                        await prod.SendAsync(message, msgDeliveryMode, MsgPriority.Normal, TimeSpan.MinValue);
+                        //txtMessage = "发送成功!!";
                     });
                 });
                 return true;
@@ -524,12 +514,10 @@ namespace SuperMQ
                 try
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(MQConfig));
-                    using (XmlTextReader xr = new XmlTextReader(filePath))
-                    {
-                        MQConfig rtn = (MQConfig)xs.Deserialize(xr);
-                        xr.Close();
-                        return rtn;
-                    }
+                    using XmlTextReader xr = new XmlTextReader(filePath);
+                    MQConfig rtn = (MQConfig)xs.Deserialize(xr);
+                    xr.Close();
+                    return rtn;
                 }
                 catch (Exception) { return null; }
             }
@@ -545,12 +533,10 @@ namespace SuperMQ
                 try
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(MQConfig));
-                    using (XmlTextWriter tw = new XmlTextWriter(filePath, Encoding.UTF8) { Indentation = 4, Formatting = Formatting.Indented })
-                    {
-                        xs.Serialize(tw, config);
-                        tw.Flush();
-                        tw.Close();
-                    }
+                    using XmlTextWriter tw = new XmlTextWriter(filePath, Encoding.UTF8) { Indentation = 4, Formatting = Formatting.Indented };
+                    xs.Serialize(tw, config);
+                    tw.Flush();
+                    tw.Close();
                 }
                 catch (Exception) { }
             }

@@ -214,10 +214,8 @@ namespace SuperMQ
                 {
                     Start();
                 }
-                using (IMessageProducer producer = CreateProducer(messageType))
-                {
-                    Publish(messageBody, producer);
-                }
+                using IMessageProducer producer = CreateProducer(messageType);
+                Publish(messageBody, producer);
             }
             catch(Exception)
             {
@@ -275,10 +273,8 @@ namespace SuperMQ
                 {
                     Start();
                 }
-                using (IMessageProducer producer = CreateProducer(messageType))
-                {
-                    Publish(messageText, messageProperties, producer);
-                }
+                using IMessageProducer producer = CreateProducer(messageType);
+                Publish(messageText, messageProperties, producer);
             }
             catch (Exception)
             {
@@ -302,11 +298,9 @@ namespace SuperMQ
         {
             return Task.Run(() =>
             {
-                using (IMessageProducer producer = CreateProducer(MqMessageTypeEnum.Queue))
-                {
-                    Publish(message, null, producer);
-                    return true;
-                }
+                using IMessageProducer producer = CreateProducer(MqMessageTypeEnum.Queue);
+                Publish(message, null, producer);
+                return true;
             });
         }
 
@@ -450,7 +444,7 @@ namespace SuperMQ
                 }
             }
         }
-        private void SetMessageProperties(IDictionary<string, object> messageProperties, ref ITextMessage textMsg)
+        private static void SetMessageProperties(IDictionary<string, object> messageProperties, ref ITextMessage textMsg)
         {
             foreach (KeyValuePair<string, object> item in messageProperties)
             {
@@ -492,12 +486,12 @@ namespace SuperMQ
         }
 
         // 字符数组转字符串
-        private IList StringToByteList(string content)
+        private static IList StringToByteList(string content)
         {
             return StringToByteList(content, "GB2312");
         }
 
-        private IList StringToByteList(string content, string encodeName)
+        private static IList StringToByteList(string content, string encodeName)
         {
             byte[] resuleBytes = Encoding.GetEncoding(encodeName).GetBytes(content);
             return resuleBytes;
@@ -511,6 +505,7 @@ namespace SuperMQ
         {
             session.Dispose();
             connection.Dispose();
+            GC.SuppressFinalize(this);
         }
 
 

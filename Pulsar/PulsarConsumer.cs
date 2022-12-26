@@ -130,7 +130,7 @@ namespace SuperMQ.Pulsar
                 IsConnected = false;
             _ = Task.Run(() =>
             {
-                StateChanged.Invoke(this, state);
+                StateChanged?.Invoke(this, state);
             });
             //string stateMessage;
             var stateMessage = state switch
@@ -144,33 +144,7 @@ namespace SuperMQ.Pulsar
                 ConsumerState.Unsubscribed => "The consumer is unsubscribed.",
                 _ => $"The consumer has an unknown state '{state}'"
             };
-            //switch (state)
-            //{
-            //    case ConsumerState.Active:
-            //        stateMessage = "The consumer is active";
-            //        break;
-            //    case ConsumerState.Closed:
-            //        stateMessage = "The consumer has closed";
-            //        break;
-            //    case ConsumerState.Disconnected:
-            //        stateMessage = "The consumer is disconnected";
-            //        break;
-            //    case ConsumerState.Faulted:
-            //        stateMessage = "The consumer has faulted";
-            //        break;
-            //    case ConsumerState.Inactive:
-            //        stateMessage = "The consumer is inactive";
-            //        break;
-            //    case ConsumerState.ReachedEndOfTopic:
-            //        stateMessage = "The consumer has reached end of topic";
-            //        break;
-            //    case ConsumerState.Unsubscribed:
-            //        stateMessage = "The consumer is unsubscribed.";
-            //        break;
-            //    default:
-            //        stateMessage = $"The consumer has an unknown state '{state}'";
-            //        break;
-            //}
+
             Console.WriteLine($"The consumer for topic '{topic}' " + stateMessage);
             if (consumer.IsFinalState(state))
                 return;

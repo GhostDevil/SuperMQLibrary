@@ -8,9 +8,9 @@
   <MsgKey>cusNumber</MsgKey>
   <!--消息类型Value-->
   <MsgValue>int.Parse(cusNum)</MsgValue>
-  <!--接收消息通道-->
+  <!--接收消息Topic-->
   <ReceiveQueue>channel1</ReceiveQueue>
-  <!--发送消息通道-->
+  <!--发送消息Topic-->
   <SendQueue>channel2</SendQueue>
   <!--发送通道ID-->
   <SendId>amq-server-st</SendId>
