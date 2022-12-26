@@ -1,1 +1,1 @@
-# SuperMQLibrary2
+# SuperMQLibrary
