@@ -503,8 +503,8 @@ namespace SuperMQ
 
         public void Dispose()
         {
-            session.Dispose();
-            connection.Dispose();
+            session?.Dispose();
+            connection?.Dispose();
             GC.SuppressFinalize(this);
         }
 

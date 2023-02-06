@@ -155,8 +155,6 @@ namespace SuperMQ
         /// </summary>
         /// <param name="config">mq配置对象</param>
         /// <param name="isListener">是否使用监听接受消息</param>
-        /// <param name="isDurable">是否持久订阅，持久“订阅”后，如果你的程序被停止工作后，恢复运行，从第一次持久订阅开始，没收到的消息还可以继续收</param>
-        /// <param name="topicNames">发送端Topic主题模式有效，参数为topic主题消息队列名称</param>
         /// <returns>成功返回true，否则失败</returns>
         public ActiveMqHelper(MQConfig config, bool isListener = true)
         {
@@ -204,6 +202,12 @@ namespace SuperMQ
 
                 //如果你使用Failover失效转移，则消息服务器在死亡的那一刻，你的生产者发送消息时默认将阻塞，但你可以设置发送消息阻塞的超时时间 failover:(tcp://primary:61616)?timeout=3000
                 //如果用户希望能追踪到重连过程，可以在ActiveMQConnectionFactory设置一个TransportListener
+
+                // Example connection strings:
+                //    activemq:tcp://activemqhost:61616
+                //    stomp:tcp://activemqhost:61613
+                //    ems:tcp://tibcohost:7222
+                //    msmq://localhost
                 #endregion
 
                 //创建连接工厂
@@ -352,9 +356,9 @@ namespace SuperMQ
 
         public void Dispose()
         {
-            session.Dispose();
+            session?.Dispose();
             session = null;
-            connection.Dispose();
+            connection?.Dispose();
             connectionFactory = null;
 
         }

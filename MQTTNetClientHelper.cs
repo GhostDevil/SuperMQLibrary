@@ -5,6 +5,7 @@ using MQTTnet.Packets;
 using MQTTnet.Protocol;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -66,7 +67,7 @@ namespace SuperMQ.SuperMQTT
         /// </summary>
         MqttClient mqttClient = null;
         /// <summary>
-        /// 
+        /// 连接参数
         /// </summary>
         public MqttClientOptions options = null;
         private bool workState = false;
@@ -103,7 +104,7 @@ namespace SuperMQ.SuperMQTT
         #endregion
 
         /// <summary>
-        /// 构造一个实例
+        /// 构造实例
         /// </summary>
         /// <param name="mqttParameter">参数</param>
         public MQTTNetClientHelper(MQTTParameter mqttParameter)
@@ -151,19 +152,13 @@ namespace SuperMQ.SuperMQTT
             {
                 mqttClient = new MqttFactory().CreateMqttClient() as MqttClient;
                 MqttClientOptionsBuilder mqttClientOptions = new MqttClientOptionsBuilder();
-                switch (Parameter.MqttType)
+                mqttClientOptions = Parameter.MqttType switch
                 {
-                    case MQType.WebSocket:
-                        mqttClientOptions = new MqttClientOptionsBuilder()
-                    .WithWebSocketServer(Parameter.ServerUrl);
-                        break;
-                    default:
-                    case MQType.MQTT:
-                    case MQType.Tcp:
-                        mqttClientOptions = new MqttClientOptionsBuilder()
-                   .WithTcpServer(Parameter.ServerUrl, Parameter.Port);
-                        break;
-                }
+                    MQType.WebSocket => new MqttClientOptionsBuilder()
+                                        .WithWebSocketServer(Parameter.ServerUrl),
+                    _ => new MqttClientOptionsBuilder()
+                                       .WithTcpServer(Parameter.ServerUrl, Parameter.Port),
+                };
                 if (x509Certificates != null)
                 {
                     mqttClientOptions = mqttClientOptions.WithTls(new MqttClientOptionsBuilderTlsParameters()//服务器端没有启用加密协议时，这里用tls的会提示协议异常
@@ -271,10 +266,8 @@ namespace SuperMQ.SuperMQTT
 
                 if (mqttClient.IsConnected == false)
                 {
-                    ClientSendMessageEvent?.Invoke(false, "连接失败");
-                    Console.ForegroundColor = ConsoleColor.Blue;
+                    ClientSendMessageEvent?.Invoke(false, "连接失败");                    
                     Console.WriteLine("Publish >>Connected Failed! ");
-                    Console.ResetColor();
                     return false;
                 }
 
@@ -283,24 +276,9 @@ namespace SuperMQ.SuperMQTT
                  .WithRetainFlag(Parameter.Retained)
                  .WithQualityOfServiceLevel(Parameter.QualityOfServiceLevel);
                 topics?.ForEach(topic => mamb = mamb.WithTopic(topic));
-                //switch (Parameter.QualityOfServiceLevel)
-                //{
-                //    case 0:
-                //        mamb = mamb.WithAtMostOnceQoS();
-                //        break;
-                //    case 1:
-                //        mamb = mamb.WithAtLeastOnceQoS();
-                //        break;
-                //    case 2:
-                //        mamb = mamb.WithExactlyOnceQoS();
-                //        break;
-                //}
-
                 await mqttClient.PublishAsync(mamb.Build());
-                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine($"Publish >>Topic: {string.Join(",", Parameter.Topics?.ToArray())}; QoS: {Parameter.QualityOfServiceLevel}; Retained: {Parameter.Retained};");
-                Console.WriteLine("Publish >>Message: " + Message);
-                Console.ResetColor();
+                Debug.WriteLine("Publish >>Message: " + Message);
                 ClientSendMessageEvent?.Invoke(true, "发送完成");
                 return true;
             }
@@ -416,10 +394,10 @@ namespace SuperMQ.SuperMQTT
                 string QoS = e.ApplicationMessage.QualityOfServiceLevel.ToString();
                 string Retained = e.ApplicationMessage.Retain.ToString();
                 ClientMessageReceivedEvent?.Invoke(new MessageInfo() { QoS = e.ApplicationMessage.QualityOfServiceLevel.ToString(), Retained = e.ApplicationMessage.Retain.ToString(), Text = Encoding.UTF8.GetString(e.ApplicationMessage.Payload), Topic = e.ApplicationMessage.Topic });
-                Console.ForegroundColor = ConsoleColor.Green;
+
                 Console.WriteLine("MessageReceived >>Topic:" + Topic + "; QoS: " + QoS + "; Retained: " + Retained + ";");
-                Console.WriteLine("MessageReceived >>Msg: " + text);
-                Console.ResetColor();
+                Debug.WriteLine("MessageReceived >>Msg: " + text);
+
                 await Task.CompletedTask;
             }
             catch (Exception exp)
