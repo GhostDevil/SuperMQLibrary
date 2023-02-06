@@ -27,7 +27,7 @@
 		<PackageReference Include="DotPulsar" Version="2.10.0" />
 		<PackageReference Include="MQTTnet" Version="4.1.4.563" />
 		<PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.1.4.563" />
-		<PackageReference Include="NewLife.RocketMQ" Version="2.1.2022.1201" />
+		<PackageReference Include="NewLife.RocketMQ" Version="2.1.2023.205" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="ConfigInfo\MQConfig.xml">
