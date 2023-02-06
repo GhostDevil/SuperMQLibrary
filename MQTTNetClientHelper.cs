@@ -275,8 +275,12 @@ namespace SuperMQ.SuperMQTT
                  .WithPayload(Message)
                  .WithRetainFlag(Parameter.Retained)
                  .WithQualityOfServiceLevel(Parameter.QualityOfServiceLevel);
-                topics?.ForEach(topic => mamb = mamb.WithTopic(topic));
-                await mqttClient.PublishAsync(mamb.Build());
+                topics?.ForEach(async topic => 
+                {
+                    mamb = mamb.WithTopic(topic);
+                    await mqttClient.PublishAsync(mamb.Build());
+                });
+               
                 Console.WriteLine($"Publish >>Topic: {string.Join(",", Parameter.Topics?.ToArray())}; QoS: {Parameter.QualityOfServiceLevel}; Retained: {Parameter.Retained};");
                 Debug.WriteLine("Publish >>Message: " + Message);
                 ClientSendMessageEvent?.Invoke(true, "发送完成");
