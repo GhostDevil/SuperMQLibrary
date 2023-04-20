@@ -1,11 +1,37 @@
-﻿using NewLife.RocketMQ;
+﻿using NewLife.Log;
+using NewLife.RocketMQ;
+using NewLife.RocketMQ.Client;
 
 namespace SuperMQ
 {
     public class RocketMQHelper
     {
-        public Producer Producer{get;set;}
+        public Producer Producer { get; set; }
         public Consumer Consumer { get; set; }
+        /// <summary>
+        /// 更新或创建主题。重复执行时为更新
+        /// </summary>
+        /// <param name="topic">主题</param>
+        /// <param name="queueNum">队列数</param>
+        public static void CreateOrUpdateTopic(string server, string topic, bool isConsumer, int queueNum = 16)
+        {
+            MqBase mq;
+            if (!isConsumer)
+                mq = new Producer();
+            else
+                mq = new Consumer();
+
+            //Topic = "nx_test",
+            mq.NameServerAddress = server;
+            mq.Log = XTrace.Log;
+
+            mq.Start();
+            // 创建topic时，start前不能指定topic，让其使用默认TBW102
+            //Assert.Equal("TBW102", mq.Topic);
+
+            mq.CreateTopic(topic, queueNum);
+            mq.Stop();
+        }
         //public RocketMQParameter Parameter { get; }
 
         //public RocketMQConsumerHelper(RocketMQParameter parameter)

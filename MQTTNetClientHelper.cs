@@ -254,11 +254,11 @@ namespace SuperMQ.SuperMQTT
         /// </summary>
         /// <param name="Message">发布内容</param>
         /// <returns></returns>
-        public async Task<bool> Publish(List<string> topics, string Message)
+        public async Task<bool> Publish(List<string> topics, string message)
         {
             try
             {
-                if (topics == null || topics.Count == 0)
+                if (topics == null || topics.Count == 0 || string.IsNullOrWhiteSpace(message))
                     return false;
                 if (mqttClient == null) return false;
                 if (mqttClient.IsConnected == false)
@@ -272,7 +272,7 @@ namespace SuperMQ.SuperMQTT
                 }
 
                 MqttApplicationMessageBuilder mamb = new MqttApplicationMessageBuilder()
-                 .WithPayload(Message)
+                 .WithPayload(message)
                  .WithRetainFlag(Parameter.Retained)
                  .WithQualityOfServiceLevel(Parameter.QualityOfServiceLevel);
                 topics?.ForEach(async topic => 
@@ -282,7 +282,7 @@ namespace SuperMQ.SuperMQTT
                 });
                
                 Console.WriteLine($"Publish >>Topic: {string.Join(",", Parameter.Topics?.ToArray())}; QoS: {Parameter.QualityOfServiceLevel}; Retained: {Parameter.Retained};");
-                Debug.WriteLine("Publish >>Message: " + Message);
+                Debug.WriteLine("Publish >>Message: " + message);
                 ClientSendMessageEvent?.Invoke(true, "发送完成");
                 return true;
             }
@@ -327,7 +327,7 @@ namespace SuperMQ.SuperMQTT
                 running = true;
                 List<MqttTopicFilter> listTopic = new List<MqttTopicFilter>();
                 Console.ForegroundColor = ConsoleColor.Green;
-                Parameter.Topics.ForEach(o =>
+                Parameter.TopicsConsumer.ForEach(o =>
                 {
                     var topicFilterBulder = new MqttTopicFilterBuilder().WithTopic(o).Build();
                     listTopic.Add(topicFilterBulder);

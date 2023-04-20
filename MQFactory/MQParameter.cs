@@ -22,9 +22,13 @@ namespace SuperMQ.MQFactory
         /// </summary>
         public string User { get; set; } 
         /// <summary>
-        /// 主题
+        /// 生产主题
         /// </summary>
         public List<string> Topics { get; set; }
+        /// <summary>
+        /// 消费主题
+        /// </summary>
+        public List<string> TopicsConsumer { get; set; }
         /// <summary>
         /// 保留消息
         /// </summary>
