@@ -25,9 +25,9 @@
 		<PackageReference Include="Apache.NMS" Version="2.0.0" />
 		<PackageReference Include="Apache.NMS.ActiveMQ" Version="2.1.0" />
 		<PackageReference Include="DotPulsar" Version="2.11.0" />
-		<PackageReference Include="MQTTnet" Version="4.1.4.563" />
-		<PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.1.4.563" />
-		<PackageReference Include="NewLife.RocketMQ" Version="2.2.2023.401" />
+		<PackageReference Include="MQTTnet" Version="4.2.1.781" />
+		<PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.2.1.781" />
+		<PackageReference Include="NewLife.RocketMQ" Version="2.3.2023.601" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="ConfigInfo\MQConfig.xml">
