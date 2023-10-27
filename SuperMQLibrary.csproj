@@ -22,12 +22,12 @@
 		<None Remove="SuperMQLibrary.xml" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Apache.NMS" Version="2.0.0" />
+		<PackageReference Include="Apache.NMS" Version="2.1.0" />
 		<PackageReference Include="Apache.NMS.ActiveMQ" Version="2.1.0" />
-		<PackageReference Include="DotPulsar" Version="2.11.0" />
-		<PackageReference Include="MQTTnet" Version="4.2.1.781" />
-		<PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.2.1.781" />
-		<PackageReference Include="NewLife.RocketMQ" Version="2.3.2023.601" />
+		<PackageReference Include="DotPulsar" Version="3.0.2" />
+		<PackageReference Include="MQTTnet" Version="4.3.1.873" />
+		<PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.3.1.873" />
+		<PackageReference Include="NewLife.RocketMQ" Version="2.5.2023.904" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="ConfigInfo\MQConfig.xml">

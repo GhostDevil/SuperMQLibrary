@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static SuperMQ.MQFactory.MQParameter;
 using static SuperMQ.SuperMQTT.MQTTNetClientHelper.MQTTParameter;
@@ -155,22 +156,16 @@ namespace SuperMQ.SuperMQTT
                 mqttClientOptions = Parameter.MqttType switch
                 {
                     MQType.WebSocket => new MqttClientOptionsBuilder()
-                                        .WithWebSocketServer(Parameter.ServerUrl),
+                                        .WithWebSocketServer(o=>o.WithUri(Parameter.ServerUrl) ),
                     _ => new MqttClientOptionsBuilder()
                                        .WithTcpServer(Parameter.ServerUrl, Parameter.Port),
                 };
                 if (x509Certificates != null)
                 {
-                    mqttClientOptions = mqttClientOptions.WithTls(new MqttClientOptionsBuilderTlsParameters()//服务器端没有启用加密协议时，这里用tls的会提示协议异常
+                    mqttClientOptions = mqttClientOptions.WithTlsOptions(o => 
                     {
-                        AllowUntrustedCertificates = false,//允许不受信任的证书
-                        UseTls = true,
-                        Certificates = x509Certificates,
-                        CertificateValidationHandler = new Func<MqttClientCertificateValidationEventArgs, bool>(CertificateValidationCallback),
-                        SslProtocol = SslProtocol,
-
-                        IgnoreCertificateChainErrors = false,//忽略证书链错误
-                        IgnoreCertificateRevocationErrors = false//忽略证书撤销错误
+                        o.WithCertificateValidationHandler(CertificateValidationCallback);
+                        o.WithSslProtocols(SslProtocol);
                     });
                 }
                 options = mqttClientOptions.WithCredentials(Parameter.User, Parameter.Password)
@@ -183,8 +178,9 @@ namespace SuperMQ.SuperMQTT
                 mqttClient.ConnectedAsync += Connected;
                 mqttClient.DisconnectedAsync += Disconnected;
                 mqttClient.ApplicationMessageReceivedAsync += MqttApplicationMessageReceived;
-
-               await mqttClient.ConnectAsync(options);
+                using var timeout = new CancellationTokenSource(5000);
+                await mqttClient.ConnectAsync(options, timeout.Token);
+                Console.WriteLine("The MQTT client is connected.");
             }
             catch (Exception exp)
             {
@@ -195,60 +191,6 @@ namespace SuperMQ.SuperMQTT
                 ExceptionHappenedEvent?.Invoke(exp);
             }
         }
-
-        #region
-        //public void StartMain()
-        //{
-        //    try
-        //    {
-        //        var factory = new MqttFactory();
-
-        //        var mqttClient = factory.CreateMqttClient();
-
-        //        var options = new MqttClientOptionsBuilder()
-        //            .WithTcpServer(parameter.ServerUrl, parameter.Port)
-        //            .WithCredentials(parameter.UserId, parameter.Password)
-        //            .WithClientId(parameter.ClientId)
-        //            .Build();
-
-        //        mqttClient.ConnectAsync(options);
-
-        //        mqttClient.UseConnectedHandler(async e =>
-        //        {
-        //            Console.WriteLine("Connected >>Success");
-        //            // Subscribe to a topic
-        //            var topicFilterBulder = new TopicFilterBuilder().WithTopic(parameter.Topic).Build();
-        //            await mqttClient.SubscribeAsync(topicFilterBulder);
-        //            Console.WriteLine("Subscribe >>" + parameter.Topic);
-        //        });
-
-        //        mqttClient.UseDisconnectedHandler(async e =>
-        //        {
-        //            Console.WriteLine("Disconnected >>Disconnected Server");
-        //            await Task.Delay(TimeSpan.FromSeconds(5));
-        //            try
-        //            {
-        //                await mqttClient.ConnectAsync(options);
-        //            }
-        //            catch (Exception exp)
-        //            {
-        //                Console.WriteLine("Disconnected >>Exception" + exp.Message);
-        //            }
-        //        });
-
-        //        mqttClient.UseApplicationMessageReceivedHandler(e =>
-        //        {
-        //            Console.WriteLine("MessageReceived >>" + Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
-        //        });
-        //        Console.WriteLine(mqttClient.IsConnected.ToString());
-        //    }
-        //    catch (Exception exp)
-        //    {
-        //        Console.WriteLine("MessageReceived >>" + exp.Message);
-        //    }
-        //}
-        #endregion
-
         /// <summary>
         /// 发布消息
         /// </summary>
@@ -393,7 +335,7 @@ namespace SuperMQ.SuperMQTT
         {
             try
             {
-                string text = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+                string text = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
                 string Topic = e.ApplicationMessage.Topic;
                 string QoS = e.ApplicationMessage.QualityOfServiceLevel.ToString();
                 string Retained = e.ApplicationMessage.Retain.ToString();
