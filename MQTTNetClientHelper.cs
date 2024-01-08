@@ -339,7 +339,7 @@ namespace SuperMQ.SuperMQTT
                 string Topic = e.ApplicationMessage.Topic;
                 string QoS = e.ApplicationMessage.QualityOfServiceLevel.ToString();
                 string Retained = e.ApplicationMessage.Retain.ToString();
-                ClientMessageReceivedEvent?.Invoke(new MessageInfo() { QoS = e.ApplicationMessage.QualityOfServiceLevel.ToString(), Retained = e.ApplicationMessage.Retain.ToString(), Text = Encoding.UTF8.GetString(e.ApplicationMessage.Payload), Topic = e.ApplicationMessage.Topic });
+                ClientMessageReceivedEvent?.Invoke(new MessageInfo() { QoS = e.ApplicationMessage.QualityOfServiceLevel.ToString(), Retained = e.ApplicationMessage.Retain.ToString(), Text = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment), Topic = e.ApplicationMessage.Topic });
 
                 Console.WriteLine("MessageReceived >>Topic:" + Topic + "; QoS: " + QoS + "; Retained: " + Retained + ";");
                 Debug.WriteLine("MessageReceived >>Msg: " + text);

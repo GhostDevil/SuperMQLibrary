@@ -570,7 +570,6 @@ namespace SuperMQ
                 public TimeSpan TimeToLive { get; set; }
                 public string Type { get; set; }
                 public object Content { get; set; }
-
                 public MessageType ContentType { get; set; }
 
             }

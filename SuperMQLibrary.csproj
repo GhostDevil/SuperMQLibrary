@@ -2,13 +2,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
-		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+		<TargetFrameworks>net7.0;net8.0</TargetFrameworks>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 		<RootNamespace>SuperMQ</RootNamespace>
 		<AssemblyName>SuperMQLibrary</AssemblyName>
-		<FileVersion>22.11.8.0</FileVersion>
+		<FileVersion>24.04.04.0</FileVersion>
+		<AssemblyVersion>24.04.04.0</AssemblyVersion>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
@@ -24,10 +25,10 @@
 	<ItemGroup>
 		<PackageReference Include="Apache.NMS" Version="2.1.0" />
 		<PackageReference Include="Apache.NMS.ActiveMQ" Version="2.1.0" />
-		<PackageReference Include="DotPulsar" Version="3.0.2" />
-		<PackageReference Include="MQTTnet" Version="4.3.1.873" />
-		<PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.3.1.873" />
-		<PackageReference Include="NewLife.RocketMQ" Version="2.5.2023.904" />
+		<PackageReference Include="DotPulsar" Version="3.1.1" />
+		<PackageReference Include="MQTTnet" Version="4.3.3.952" />
+		<PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.3.3.952" />
+		<PackageReference Include="NewLife.RocketMQ" Version="2.5.2024.101" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="ConfigInfo\MQConfig.xml">
